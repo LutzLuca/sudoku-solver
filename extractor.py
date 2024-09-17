@@ -129,14 +129,14 @@ def extract(image_path: str) -> np.ndarray:
 
     def cut_out_digit(res: Optional[Tuple[MatLike, Rect]]) -> MatLike:
         if res is None:
-            return np.zeros((28, 28), dtype=np.uint8)
+            return None
 
         digit, bbox = res
         w, h = bbox[1][0] - bbox[0][0], bbox[1][1] - bbox[0][1]
 
         if (w * h) > 100:
             return centre_to_size(cut_out_rect(digit, bbox), 28, 4)
-        return np.zeros((28, 28), dtype=np.uint8)
+        return None
 
     return np.fromiter(
         map(
