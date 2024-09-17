@@ -162,18 +162,31 @@ def cut_out_rect(img: MatLike, rect: Rect) -> MatLike:
 
 
 def grid_image(digits: np.ndarray, color: int = 255) -> MatLike:
+    def default_if_none(img):
+        if img is None:
+            return np.zeros((28, 28), dtype=np.uint8)
+        return img
+
     rows = [
         np.concatenate(
             [
                 cv.copyMakeBorder(
-                    img.copy(), 1, 1, 1, 1, cv.BORDER_CONSTANT, None, color
+                    default_if_none(digits[row * 9 + col]),
+                    1,
+                    1,
+                    1,
+                    1,
+                    cv.BORDER_CONSTANT,
+                    None,
+                    color,
                 )
-                for img in digits[i * 9 : (i + 1) * 9]
+                for col in range(9)
             ],
             axis=1,
         )
-        for i in range(9)
+        for row in range(9)
     ]
+
     return np.concatenate(rows)
 
 
