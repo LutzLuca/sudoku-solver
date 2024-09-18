@@ -27,10 +27,12 @@ def create_model() -> Sequential:
     return model
 
 
-def train_model(save_path: str, batch_size: int, epochs: int, data_dir: str) -> None:
+def train_model(
+    save_path: str, batch_size: int, epochs: int, data_dir: str, mnist: float
+) -> None:
     save_path = os.path.splitext(save_path)[0] + ".keras"
 
-    x_train, x_val, y_train, y_val = prepare_data(data_dir)
+    x_train, x_val, y_train, y_val = prepare_data(data_dir, mnist)
     model = create_model()
 
     model.fit(
@@ -65,5 +67,6 @@ if __name__ == "__main__":
         type=str,
         help="Directory containing the training data",
     )
+    parser.add_argument("--mnist", default=1.0, type=float)
 
     train_model(**vars(parser.parse_args()))
