@@ -1,4 +1,4 @@
-from solver import solve
+from sudoku_solver.solver import solve
 import numpy as np
 
 

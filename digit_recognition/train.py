@@ -63,7 +63,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--data_dir",
-        default="./data/digits",
+        default="data/digits",
         type=str,
         help="Directory containing the training data",
     )

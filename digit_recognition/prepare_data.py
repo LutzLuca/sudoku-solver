@@ -11,7 +11,6 @@ def load_images(data_dir: str) -> Dict[int, List[np.ndarray]]:
         return np.expand_dims(img / 255.0, -1)
 
     image_dict: Dict[int, List[np.ndarray]] = {}
-
     for num in range(1, 10):
         digit_dir = Path(data_dir) / str(num)
         image_dict[num] = [
