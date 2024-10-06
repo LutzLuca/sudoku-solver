@@ -115,9 +115,8 @@ def warp_perspective(rect: np.ndarray, grid: MatLike) -> MatLike:
     return square_image(warped)
 
 
-def extract(image_path: str) -> np.ndarray:
-    image = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
-    preprocessed_image = preprocess(image)
+def extract_digits(img) -> np.ndarray:
+    preprocessed_image = preprocess(img)
     grid_points = find_sudoku_grid(preprocessed_image)
     cropped = warp_perspective(
         np.array(grid_points, dtype="float32"), preprocessed_image
@@ -146,6 +145,11 @@ def extract(image_path: str) -> np.ndarray:
         dtype=np.ndarray,
         count=81,
     )
+
+
+def extract_digits_from_path(image_path: str) -> np.ndarray:
+    image = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
+    return extract_digits(image)
 
 
 def raw_squares(img: MatLike, sq_sz: int):
@@ -191,7 +195,7 @@ def grid_image(digits: np.ndarray, color: int = 255) -> MatLike:
 
 
 def main(image_path: str):
-    digits = extract(image_path)
+    digits = extract_digits_from_path(image_path)
     grid = grid_image(digits)
 
     cv.imshow("result", grid)

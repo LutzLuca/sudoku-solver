@@ -1,16 +1,13 @@
 from argparse import ArgumentParser
 import cv2 as cv
-from extractor import extract, grid_image
+from .extractor import grid_image, extract_digits
 import numpy as np
-from solver import solve
+from .solver import solve
 import tensorflow as tf
 
 
-def main(model_path: str, img_path: str):
-    model = tf.keras.models.load_model(model_path)
-
-    digits = extract(img_path)
-    # grid = grid_image(digits)
+def process_sudoku_image(model, img):
+    digits = extract_digits(img)
 
     grid = np.zeros(81, dtype=np.uint8)
     for idx, digit in filter(lambda x: x[1] is not None, enumerate(digits)):
@@ -24,14 +21,23 @@ def main(model_path: str, img_path: str):
 
     solved = solve(grid)
     if not solved:
-        print("Failed to solve grid")
-        return
+        raise Exception("Failed to solve Sukodu")
 
-    digit_imgs = np.array([create_digit_image(digit) for digit in grid])
+    return grid
 
-    cv.imshow("Grid", grid_image(digit_imgs))
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+
+def main(model_path: str, img_path: str):
+    model = tf.keras.models.load_model(model_path)
+
+    try:
+        grid = process_sudoku_image(model, img_path)
+        digit_imgs = np.array([create_digit_image(digit) for digit in grid])
+
+        cv.imshow("Grid", grid_image(digit_imgs))
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+    except Exception as e:
+        print(str(e))
 
 
 def create_digit_image(digit: int, size=(28, 28)):
